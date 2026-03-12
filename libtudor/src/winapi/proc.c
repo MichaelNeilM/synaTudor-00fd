@@ -323,3 +323,75 @@ __winfnc void Sleep(DWORD num_ms) {
     cant_fail(usleep((useconds_t) num_ms * 1000));
 }
 WINAPI(Sleep)
+
+// USER32.dll stubs - the fingerprint driver DLL calls these but doesn't actually use window functionality
+__winfnc WORD RegisterClassExW(const void *lpwcx) {
+    return 1; //Return a fake non-zero ATOM (class identifier) to indicate success
+}
+WINAPI(RegisterClassExW)
+
+__winfnc BOOL UnregisterClassW(const char16_t *lpClassName, HANDLE hInstance) {
+    return TRUE;
+}
+WINAPI(UnregisterClassW)
+
+__winfnc HANDLE CreateWindowExW(DWORD dwExStyle, const char16_t *lpClassName, const char16_t *lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HANDLE hWndParent, HANDLE hMenu, HANDLE hInstance, void *lpParam) {
+    return (HANDLE) 0x1; //Return a fake non-null window handle
+}
+WINAPI(CreateWindowExW)
+
+__winfnc BOOL DestroyWindow(HANDLE hWnd) {
+    return TRUE;
+}
+WINAPI(DestroyWindow)
+
+__winfnc BOOL PostMessageW(HANDLE hWnd, UINT Msg, ULONG wParam, LONG lParam) {
+    return TRUE;
+}
+WINAPI(PostMessageW)
+
+__winfnc LONG DefWindowProcW(HANDLE hWnd, UINT Msg, ULONG wParam, LONG lParam) {
+    return 0;
+}
+WINAPI(DefWindowProcW)
+
+__winfnc HANDLE RegisterPowerSettingNotification(HANDLE hRecipient, const GUID *PowerSettingGuid, DWORD Flags) {
+    return (HANDLE) 0x1; //Return a fake non-null notification handle
+}
+WINAPI(RegisterPowerSettingNotification)
+
+__winfnc BOOL UnregisterPowerSettingNotification(HANDLE Handle) {
+    return TRUE;
+}
+WINAPI(UnregisterPowerSettingNotification)
+
+__winfnc BOOL GetMessageW(void *lpMsg, HANDLE hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax) {
+    return FALSE; //Return FALSE to indicate WM_QUIT / no message
+}
+WINAPI(GetMessageW)
+
+__winfnc BOOL PeekMessageW(void *lpMsg, HANDLE hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg) {
+    return FALSE;
+}
+WINAPI(PeekMessageW)
+
+__winfnc BOOL TranslateMessage(const void *lpMsg) {
+    return FALSE;
+}
+WINAPI(TranslateMessage)
+
+__winfnc LONG DispatchMessageW(const void *lpMsg) {
+    return 0;
+}
+WINAPI(DispatchMessageW)
+
+// WTSAPI32.dll stubs - Windows Terminal Services, not used functionally by the fingerprint driver
+__winfnc BOOL WTSRegisterSessionNotification(HANDLE hWnd, DWORD dwFlags) {
+    return TRUE;
+}
+WINAPI(WTSRegisterSessionNotification)
+
+__winfnc BOOL WTSUnRegisterSessionNotification(HANDLE hWnd) {
+    return TRUE;
+}
+WINAPI(WTSUnRegisterSessionNotification)

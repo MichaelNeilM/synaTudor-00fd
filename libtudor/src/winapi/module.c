@@ -93,6 +93,7 @@ __winfnc HANDLE GetModuleHandleA(const char *name) {
 WINAPI(GetModuleHandleA)
 
 __winfnc HANDLE GetModuleHandleW(const char16_t *name) {
+    if(!name) return cur_module ? cur_module->handle : NULL;
     char *cname = winstr_to_str(name);
     struct winmodule *module = (struct winmodule*) winmodule_find(cname);
     free(cname);

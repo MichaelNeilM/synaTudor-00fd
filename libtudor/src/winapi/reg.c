@@ -191,3 +191,47 @@ __winfnc LONG RegSetValueExW(HANDLE hkey, const char16_t *val_name, DWORD resv, 
     return suc ? ERROR_SUCCESS : WINERR_SET_CODE;
 }
 WINAPI(RegSetValueExW)
+
+__winfnc LONG RegDeleteValueA(HANDLE hkey, const char *val_name) {
+    return ERROR_SUCCESS;
+}
+WINAPI(RegDeleteValueA)
+
+__winfnc LONG RegDeleteValueW(HANDLE hkey, const char16_t *val_name) {
+    return ERROR_SUCCESS;
+}
+WINAPI(RegDeleteValueW)
+
+__winfnc LONG RegQueryInfoKeyW(HANDLE hkey, char16_t *lpClass, DWORD *lpcchClass, DWORD *lpReserved,
+    DWORD *lpcSubKeys, DWORD *lpcbMaxSubKeyLen, DWORD *lpcbMaxClassLen,
+    DWORD *lpcValues, DWORD *lpcbMaxValueNameLen, DWORD *lpcbMaxValueLen,
+    DWORD *lpcbSecurityDescriptor, void *lpftLastWriteTime) {
+    if(lpClass && lpcchClass && *lpcchClass > 0) lpClass[0] = 0;
+    if(lpcchClass) *lpcchClass = 0;
+    if(lpcSubKeys) *lpcSubKeys = 0;
+    if(lpcbMaxSubKeyLen) *lpcbMaxSubKeyLen = 0;
+    if(lpcbMaxClassLen) *lpcbMaxClassLen = 0;
+    if(lpcValues) *lpcValues = 0;
+    if(lpcbMaxValueNameLen) *lpcbMaxValueNameLen = 0;
+    if(lpcbMaxValueLen) *lpcbMaxValueLen = 0;
+    if(lpcbSecurityDescriptor) *lpcbSecurityDescriptor = 0;
+    return ERROR_SUCCESS;
+}
+WINAPI(RegQueryInfoKeyW)
+
+__winfnc LONG RegEnumValueW(HANDLE hkey, DWORD dwIndex, char16_t *lpValueName, DWORD *lpcchValueName,
+    DWORD *lpReserved, DWORD *lpType, BYTE *lpData, DWORD *lpcbData) {
+    return 0x103; //ERROR_NO_MORE_ITEMS
+}
+WINAPI(RegEnumValueW)
+
+__winfnc LONG RegEnumKeyExW(HANDLE hkey, DWORD dwIndex, char16_t *lpName, DWORD *lpcchName,
+    DWORD *lpReserved, char16_t *lpClass, DWORD *lpcchClass, void *lpftLastWriteTime) {
+    return 0x103; //ERROR_NO_MORE_ITEMS
+}
+WINAPI(RegEnumKeyExW)
+
+__winfnc LONG RegNotifyChangeKeyValue(HANDLE hkey, BOOL bWatchSubtree, DWORD dwNotifyFilter, HANDLE hEvent, BOOL fAsynchronous) {
+    return ERROR_SUCCESS;
+}
+WINAPI(RegNotifyChangeKeyValue)

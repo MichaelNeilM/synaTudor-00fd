@@ -350,6 +350,52 @@ WDFFUNC(WdfDeviceStopIdleActual, 248)
 __winfnc void WdfDeviceResumeIdleActual(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj) {}
 WDFFUNC(WdfDeviceResumeIdleActual, 249)
 
+// WDF functions required by newer DLL versions (synaWudfBioUsb139.dll / UMDF 2.21)
+__winfnc NTSTATUS WdfDeviceInitSetReleaseHardwareOrderOnFailure(WDF_DRIVER_GLOBALS *globals, void *dev_init, ULONG order) { return STATUS_SUCCESS; }
+WDFFUNC(WdfDeviceInitSetReleaseHardwareOrderOnFailure, 42)
+
+__winfnc NTSTATUS WdfDeviceInitSetIoTypeEx(WDF_DRIVER_GLOBALS *globals, void *dev_init, void *io_type_options) { return STATUS_SUCCESS; }
+WDFFUNC(WdfDeviceInitSetIoTypeEx, 43)
+
+__winfnc NTSTATUS WdfDevicePostEvent(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, const GUID *event_guid, ULONG wdf_event_type, BYTE *data, ULONG data_size) { return STATUS_SUCCESS; }
+WDFFUNC(WdfDevicePostEvent, 44)
+
+__winfnc NTSTATUS WdfDeviceAssignInterfaceProperty(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG type, ULONG buffer_size, void *buffer) { return STATUS_SUCCESS; }
+WDFFUNC(WdfDeviceAssignInterfaceProperty, 50)
+
+__winfnc NTSTATUS WdfDeviceAllocAndQueryInterfaceProperty(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG pool_type, void *attr, WDFOBJECT *memory) {
+    if(memory) *memory = NULL;
+    return STATUS_BUFFER_TOO_SMALL;
+}
+WDFFUNC(WdfDeviceAllocAndQueryInterfaceProperty, 51)
+
+__winfnc NTSTATUS WdfDeviceQueryInterfaceProperty(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG buffer_size, void *data, ULONG *required_size, ULONG *type) {
+    if(required_size) *required_size = 0;
+    if(type) *type = 0;
+    return STATUS_BUFFER_TOO_SMALL;
+}
+WDFFUNC(WdfDeviceQueryInterfaceProperty, 52)
+
+__winfnc void WdfDeviceGetDeviceStackIoType(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, ULONG *read_type, ULONG *write_type) { if(read_type) *read_type = 0; if(write_type) *write_type = 0; }
+WDFFUNC(WdfDeviceGetDeviceStackIoType, 53)
+
+__winfnc NTSTATUS WdfDeviceQueryPropertyEx(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG buffer_size, void *data, ULONG *required_size, ULONG *type) {
+    if(required_size) *required_size = 0;
+    if(type) *type = 0;
+    return STATUS_BUFFER_TOO_SMALL;
+}
+WDFFUNC(WdfDeviceQueryPropertyEx, 54)
+
+__winfnc NTSTATUS WdfDeviceAllocAndQueryPropertyEx(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG pool_type, void *attr, WDFOBJECT *memory, ULONG *type) {
+    if(memory) *memory = NULL;
+    if(type) *type = 0;
+    return STATUS_BUFFER_TOO_SMALL;
+}
+WDFFUNC(WdfDeviceAllocAndQueryPropertyEx, 55)
+
+__winfnc NTSTATUS WdfDeviceAssignProperty(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, void *property_data, ULONG type, ULONG buffer_size, void *buffer) { return STATUS_SUCCESS; }
+WDFFUNC(WdfDeviceAssignProperty, 56)
+
 __winfnc NTSTATUS WdfDeviceCreateDeviceInterface(WDF_DRIVER_GLOBALS *globals, WDFOBJECT device_obj, const GUID *interface_guid, const UNICODE_STRING *ref_str) { return STATUS_SUCCESS; }
 WDFFUNC(WdfDeviceCreateDeviceInterface, 27)
 

@@ -15,6 +15,7 @@ GType fpi_tod_shared_driver_get_type() {
 static FpIdEntry tudor_ids[] = {
     { .vid = 0x06cb, .pid = 0x00be },
 //  { .vid = 0x06cb, .pid = 0x00bd }, //TODO Check if it's also supported
+    { .vid = 0x06cb, .pid = 0x00fd }, //Synaptics SYN 79A (UWP WBDI)
     { 0 }
 };
 
