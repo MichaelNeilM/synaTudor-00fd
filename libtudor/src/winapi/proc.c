@@ -350,6 +350,11 @@ __winfnc BOOL PostMessageW(HANDLE hWnd, UINT Msg, ULONG wParam, LONG lParam) {
 }
 WINAPI(PostMessageW)
 
+__winfnc BOOL PostThreadMessageW(DWORD idThread, UINT Msg, ULONG wParam, LONG lParam) {
+    return TRUE;
+}
+WINAPI(PostThreadMessageW)
+
 __winfnc LONG DefWindowProcW(HANDLE hWnd, UINT Msg, ULONG wParam, LONG lParam) {
     return 0;
 }

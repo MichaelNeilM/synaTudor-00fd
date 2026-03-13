@@ -173,10 +173,17 @@ static void verify_cb(tudor_async_res_t *res, bool success, struct handler_state
         return;
     }
 
-    //Check success
+    //Check success - if tudor can't retry internally, ask fprintd to retry instead of crashing
     if(!success && !state->action.verify.retry) {
-        log_error("Verify action failed!");
-        abort();
+        log_warn("Verify capture failed (device error, e.g. resume from suspend), requesting fprintd retry");
+        struct ipc_msg_resp_verify err_msg = {
+            .type = IPC_MSG_RESP_VERIFY,
+            .retry = true,
+            .did_match = false
+        };
+        ipc_send_msg(state->ipc_sock, &err_msg, sizeof(err_msg));
+        cant_fail_ret(pthread_mutex_unlock(&state->lock));
+        return;
     }
 
     //If we're retrying, start again
@@ -216,14 +223,21 @@ static void identify_cb(tudor_async_res_t *res, bool success, struct handler_sta
         return;
     }
 
-    //Check success
-    if(!success) {
-        log_error("Identify action failed!");
-        abort();
+    //Check success - if tudor can't retry internally, ask fprintd to retry instead of crashing
+    if(!success && !state->action.identify.retry) {
+        log_warn("Identify capture failed (device error, e.g. resume from suspend), requesting fprintd retry");
+        struct ipc_msg_resp_identify err_msg = {
+            .type = IPC_MSG_RESP_IDENTIFY,
+            .retry = true,
+            .did_match = false
+        };
+        ipc_send_msg(state->ipc_sock, &err_msg, sizeof(err_msg));
+        cant_fail_ret(pthread_mutex_unlock(&state->lock));
+        return;
     }
 
     //If we're retrying, start again
-    if(!success && !state->action.verify.retry) {
+    if(!success) {
         init_action(state);
         if(!tudor_identify(state->dev, &state->action.identify.retry, &state->action.identify.has_match, &state->action.identify.guid, &state->action.identify.finger, &state->async_res)) {
             log_error("Couldn't start identify action retry!");
