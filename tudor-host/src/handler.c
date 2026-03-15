@@ -190,8 +190,16 @@ static void verify_cb(tudor_async_res_t *res, bool success, struct handler_state
     if(!success) {
         init_action(state);
         if(!tudor_verify(state->dev, state->action.verify.guid, state->action.verify.finger, &state->action.verify.retry, &state->action.verify.matches, &state->async_res)) {
-            log_error("Couldn't start verify action retry!");
-            abort();
+            log_warn("Couldn't start verify action retry, requesting fprintd retry");
+            init_action(state);
+            struct ipc_msg_resp_verify err_msg = {
+                .type = IPC_MSG_RESP_VERIFY,
+                .retry = true,
+                .did_match = false
+            };
+            ipc_send_msg(state->ipc_sock, &err_msg, sizeof(err_msg));
+            cant_fail_ret(pthread_mutex_unlock(&state->lock));
+            return;
         }
     }
 
